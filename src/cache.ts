@@ -1,6 +1,7 @@
 import IterResult, { IterArgs } from './iterresult'
 import { clone, cloneDates } from './dateutil'
 import { isArray } from './helpers'
+import { isNumberAwareDate, NumberAwareDate } from './types'
 
 export type CacheKeys = 'before' | 'after' | 'between'
 
@@ -34,11 +35,13 @@ export class Cache {
    */
   public _cacheAdd(
     what: CacheKeys | 'all',
-    value: Date[] | Date | null,
+    value: Date[] | NumberAwareDate | null,
     args?: Partial<IterArgs>
   ) {
     if (value) {
-      value = value instanceof Date ? clone(value) : cloneDates(value)
+      value = isNumberAwareDate(value)
+        ? { date: clone(value.date), number: value.number }
+        : cloneDates(value)
     }
 
     if (what === 'all') {
@@ -59,8 +62,8 @@ export class Cache {
   public _cacheGet(
     what: CacheKeys | 'all',
     args?: Partial<IterArgs>
-  ): Date | Date[] | false | null {
-    let cached: Date | Date[] | false | null = false
+  ): NumberAwareDate | Date[] | false | null {
+    let cached: NumberAwareDate | Date[] | false | null = false
     const argsKeys = args ? (Object.keys(args) as (keyof IterArgs)[]) : []
     const findCacheDiff = function (item: IterArgs) {
       for (let i = 0; i < argsKeys.length; i++) {
@@ -93,14 +96,14 @@ export class Cache {
       for (let i = 0; i < (this.all as Date[]).length; i++) {
         if (!iterResult.accept((this.all as Date[])[i])) break
       }
-      cached = iterResult.getValue() as Date
+      cached = iterResult.getValue()
       this._cacheAdd(what, cached, args)
     }
 
     return isArray(cached)
       ? cloneDates(cached)
-      : cached instanceof Date
-      ? clone(cached)
+      : isNumberAwareDate(cached)
+      ? { date: clone(cached.date), number: cached.number }
       : cached
   }
 }

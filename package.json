@@ -20,6 +20,7 @@
     "url": "git://github.com/jakubroztocil/rrule.git"
   },
   "scripts": {
+    "_run": "ts-node src/run.ts",
     "prebuild": "yarn clean",
     "prepublish": "yarn build",
     "build": "yarn lint && yarn format-check && tsc -b tsconfig.build.json && webpack && tsc dist/esm/**/*.d.ts",
@@ -84,7 +85,6 @@
     "dist",
     "README.md"
   ],
-  "peerDependencies": {},
   "dependencies": {
     "tslib": "^2.4.0"
   }

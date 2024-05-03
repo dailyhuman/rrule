@@ -12,6 +12,7 @@ import {
   QueryMethods,
   QueryMethodTypes,
   IterResultType,
+  NumberAwareDate,
 } from './types'
 import { parseOptions, initializeOptions } from './parseoptions'
 import { parseString } from './parsestring'
@@ -136,7 +137,7 @@ export class RRule implements QueryMethods {
 
   public _cacheAdd(
     what: CacheKeys | 'all',
-    value: Date[] | Date | null,
+    value: Date[] | NumberAwareDate | null,
     args?: Partial<IterArgs>
   ) {
     if (!this._cache) return
@@ -204,7 +205,7 @@ export class RRule implements QueryMethods {
    *
    * @return Date or null
    */
-  before(dt: Date, inc = false): Date | null {
+  before(dt: Date, inc = false): NumberAwareDate | null {
     if (!isValidDate(dt)) {
       throw new Error('Invalid date passed in to RRule.before')
     }
@@ -214,7 +215,7 @@ export class RRule implements QueryMethods {
       result = this._iter(new IterResult('before', args))
       this._cacheAdd('before', result, args)
     }
-    return result as Date | null
+    return result as NumberAwareDate | null
   }
 
   /**
@@ -224,7 +225,7 @@ export class RRule implements QueryMethods {
    *
    * @return Date or null
    */
-  after(dt: Date, inc = false): Date | null {
+  after(dt: Date, inc = false): NumberAwareDate | null {
     if (!isValidDate(dt)) {
       throw new Error('Invalid date passed in to RRule.after')
     }
@@ -234,7 +235,7 @@ export class RRule implements QueryMethods {
       result = this._iter(new IterResult('after', args))
       this._cacheAdd('after', result, args)
     }
-    return result as Date | null
+    return result as NumberAwareDate | null
   }
 
   /**

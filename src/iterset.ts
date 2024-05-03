@@ -70,9 +70,12 @@ export function iterSet<M extends QueryMethodTypes>(
     case 'between':
       return res as IterResultType<M>
     case 'before':
-      return ((res.length && res[res.length - 1]) || null) as IterResultType<M>
+      return (
+        res.length ? { date: res[res.length - 1], number: res.length } : null
+      ) as IterResultType<M>
     case 'after':
-    default:
-      return ((res.length && res[0]) || null) as IterResultType<M>
+      return (
+        res.length ? { date: res[res.length - 1], number: this.total } : null
+      ) as IterResultType<M>
   }
 }

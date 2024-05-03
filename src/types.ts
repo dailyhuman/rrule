@@ -1,10 +1,21 @@
 import { Weekday, WeekdayStr } from './weekday'
 
+export type NumberAwareDate = { date: Date; number: number }
+export function isNumberAwareDate(data: unknown): data is NumberAwareDate {
+  const _data = data as NumberAwareDate
+  return (
+    typeof _data === 'object' &&
+    _data !== null &&
+    _data.date instanceof Date &&
+    typeof _data === 'number'
+  )
+}
+
 export interface QueryMethods {
   all(): Date[]
   between(after: Date, before: Date, inc: boolean): Date[]
-  before(date: Date, inc: boolean): Date | null
-  after(date: Date, inc: boolean): Date | null
+  before(date: Date, inc: boolean): NumberAwareDate | null
+  after(date: Date, inc: boolean): NumberAwareDate | null
 }
 
 export type QueryMethodTypes = keyof QueryMethods
@@ -12,7 +23,7 @@ export type IterResultType<M extends QueryMethodTypes> = M extends
   | 'all'
   | 'between'
   ? Date[]
-  : Date | null
+  : NumberAwareDate | null
 
 export enum Frequency {
   YEARLY = 0,
